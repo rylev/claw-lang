@@ -176,6 +176,7 @@ fn encode_assignment(
             }
         }
         ItemId::Function(_) => panic!("Assigning to functions isn't allowed!!"),
+        ItemId::BuiltIn(_) => panic!("Assigning to built-in functions isn't allowed!!"),
     }
     Ok(())
 }

@@ -1,6 +1,6 @@
 use crate::lexer::Token;
 use crate::{ParseInput, ParserError};
-use ast::{Component, PrimitiveType, TypeId, ValType};
+use ast::{Component, PrimitiveType, ResultType, TypeId, ValType};
 use claw_ast as ast;
 
 pub fn parse_valtype(input: &mut ParseInput, comp: &mut Component) -> Result<TypeId, ParserError> {
@@ -23,6 +23,16 @@ pub fn parse_valtype(input: &mut ParseInput, comp: &mut Component) -> Result<Typ
         Token::F64 => ValType::Primitive(PrimitiveType::F64),
         // String
         Token::String => ValType::Primitive(PrimitiveType::String),
+        // Result
+        Token::Result => {
+            let _ = input.assert_next(Token::LT, "'<'")?;
+            let ok = parse_valtype(input, comp)?;
+            input.assert_next(Token::Comma, "','")?;
+            let err = parse_valtype(input, comp)?;
+            let _ = input.assert_next(Token::GT, "'>'")?;
+
+            ValType::Result(ResultType { ok, err })
+        }
         _ => return Err(input.unexpected_token("Not a legal type")),
     };
     let name_id = comp.new_type(valtype, span);

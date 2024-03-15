@@ -38,6 +38,12 @@ pub enum ItemId {
     Param(ParamId),
     Local(LocalId),
     Function(FunctionId),
+    BuiltIn(BuiltIn),
+}
+
+#[derive(Clone, Copy, Debug)]
+pub enum BuiltIn {
+    Ok,
 }
 
 #[derive(Error, Debug, Diagnostic)]

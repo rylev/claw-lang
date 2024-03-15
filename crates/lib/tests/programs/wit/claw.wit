@@ -44,6 +44,10 @@ world strings {
     export concat: func(left: string, right: string) -> string;
 }
 
+world results {
+    export exported: func() -> result<string, u32>;
+}
+
 world timer-proxy {
     import wasi:clocks/monotonic-clock;
     import wasi:logging/logging;

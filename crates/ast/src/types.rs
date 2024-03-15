@@ -40,7 +40,7 @@ pub enum PrimitiveType {
     String,
 }
 
-#[derive(Debug, Hash, Clone)]
+#[derive(Copy, Debug, Hash, Clone)]
 pub struct ResultType {
     pub ok: TypeId,
     pub err: TypeId,

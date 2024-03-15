@@ -198,6 +198,7 @@ impl<'gen> ImportEncoder<'gen> {
             ResolvedType::Primitive(ptype) => ptype.to_comp_valtype(comp),
             ResolvedType::Import(_) => todo!(),
             ResolvedType::Defined(type_id) => type_id.to_comp_valtype(comp),
+            ResolvedType::Result(_) => todo!(),
         }
     }
 }
@@ -357,6 +358,7 @@ impl<'a, 'b, 'c> ImportInterfaceEncoder<'a, 'b, 'c> {
                 enc::ComponentValType::Type(index)
             }
             ResolvedType::Defined(type_id) => type_id.to_comp_valtype(comp),
+            ResolvedType::Result(_) => todo!(),
         }
     }
 }

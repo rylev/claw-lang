@@ -89,6 +89,8 @@ impl<'ctx> FunctionResolver<'ctx> {
             mapping.insert(name, ItemId::Param(param));
         }
 
+        mapping.insert("ok".into(), ItemId::BuiltIn(crate::BuiltIn::Ok));
+
         FunctionResolver {
             src,
             component,

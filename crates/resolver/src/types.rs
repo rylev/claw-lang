@@ -6,6 +6,7 @@ use crate::imports::ImportTypeId;
 #[derive(Clone, Copy, Debug)]
 pub enum ResolvedType {
     Primitive(ast::PrimitiveType),
+    Result(ast::ResultType),
     Import(ImportTypeId),
     Defined(TypeId),
 }
@@ -22,6 +23,7 @@ impl std::fmt::Display for ResolvedType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             ResolvedType::Primitive(p) => (p as &dyn std::fmt::Debug).fmt(f),
+            ResolvedType::Result(r) => (r as &dyn std::fmt::Debug).fmt(f),
             ResolvedType::Import(_) => write!(f, "imported type"),
             ResolvedType::Defined(v) => (v as &dyn std::fmt::Debug).fmt(f),
         }

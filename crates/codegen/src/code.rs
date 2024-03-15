@@ -13,7 +13,7 @@ use crate::{
     GenerationError,
 };
 use claw_resolver::{
-    types::ResolvedType, ImportFuncId, ImportType, ImportTypeId, ItemId, LocalId, ParamId,
+    types::ResolvedType, BuiltIn, ImportFuncId, ImportType, ImportTypeId, ItemId, LocalId, ParamId,
     ResolvedComponent, ResolvedFunction,
 };
 use cranelift_entity::EntityRef;
@@ -191,6 +191,7 @@ impl<'gen> CodeGenerator<'gen> {
         let rtype = self.expression_type(expression)?;
         let ptype = match rtype {
             ResolvedType::Primitive(ptype) => Some(ptype),
+            ResolvedType::Result(_) => None,
             ResolvedType::Import(_) => todo!(),
             ResolvedType::Defined(type_id) => {
                 let valtype = self.comp.component.get_type(type_id);
@@ -252,7 +253,10 @@ impl<'gen> CodeGenerator<'gen> {
         match item {
             ItemId::ImportFunc(id) => self.encode_import_call(id, args, expression),
             ItemId::Function(id) => self.encode_func_call(id, args, expression),
-            _ => panic!(""),
+            ItemId::BuiltIn(builtin) => self.encode_builtin(builtin),
+            _ => {
+                panic!("Cannot call item {:?}", item)
+            }
         }
     }
 
@@ -426,6 +430,12 @@ impl<'gen> CodeGenerator<'gen> {
         // Push param pointer onto stack
         self.local_get(self.call_params_index);
         Ok(())
+    }
+
+    fn encode_builtin(&self, builtin: BuiltIn) -> Result<(), GenerationError> {
+        match builtin {
+            BuiltIn::Ok => todo!("handle built-in Ok"),
+        }
     }
 
     pub fn read_param_field(&mut self, param: ParamId, field: &FieldInfo) {

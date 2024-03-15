@@ -183,6 +183,18 @@ impl ResolveExpression for ast::Call {
                 let results = ResolvedType::Defined(*func.results.as_ref().unwrap());
                 (params.collect(), results)
             }
+            ItemId::BuiltIn(builtin) => {
+                // TODO: check args length
+                match builtin {
+                    crate::BuiltIn::Ok => {
+                        if self.args.len() > 1 {
+                            panic!("ok() takes either zero or one arguments");
+                        }
+                    }
+                }
+
+                return Ok(());
+            }
             _ => panic!("Can only call functions"),
         };
         assert_eq!(params.len(), self.args.len());
@@ -193,6 +205,24 @@ impl ResolveExpression for ast::Call {
 
         resolver.set_expr_type(expression, results);
 
+        Ok(())
+    }
+
+    fn on_resolved(
+        &self,
+        rtype: ResolvedType,
+        _expression: ExpressionId,
+        resolver: &mut FunctionResolver,
+    ) -> Result<(), ResolverError> {
+        let item = resolver.lookup_name(self.ident)?;
+        if let ItemId::BuiltIn(builtin) = item {
+            match builtin {
+                crate::BuiltIn::Ok => {
+                    let arg = self.args[0];
+                    resolver.set_expr_type(arg, rtype);
+                }
+            }
+        }
         Ok(())
     }
 }

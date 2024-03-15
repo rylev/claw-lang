@@ -98,6 +98,7 @@ impl EncodeExpression for ast::Identifier {
                 }
             }
             ItemId::Function(_) => panic!("Cannot use function as value!!"),
+            ItemId::BuiltIn(_) => panic!("Cannot use built-in as value!!"),
         }
         Ok(())
     }

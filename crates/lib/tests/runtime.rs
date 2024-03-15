@@ -279,6 +279,17 @@ fn test_strings() {
 }
 
 #[test]
+fn test_results() {
+    bindgen!("results" in "tests/programs/wit");
+    let mut runtime = Runtime::new("results");
+
+    let (results, _) =
+        Results::instantiate(&mut runtime.store, &runtime.component, &runtime.linker).unwrap();
+    let result = results.call_exported(&mut runtime.store).unwrap();
+    assert_eq!(result, Ok("hello, world!".into()));
+}
+
+#[test]
 fn test_timer_proxy() {
     bindgen!("timer-proxy" in "tests/programs/wit");
 
